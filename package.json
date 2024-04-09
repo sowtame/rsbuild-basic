@@ -5,18 +5,30 @@
   "scripts": {
     "start": "rsbuild dev --open",
     "build": "rsbuild build && rsbuild preview",
+    "build:pure": "rsbuild build",
     "preview": "rsbuild preview"
   },
   "dependencies": {
     "@alfalab/core-components": "^45.0.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@loadable/component": "^5.16.3",
+    "@mui/material": "^5.15.10",
+    "@types/express": "^4.17.21",
+    "antd": "^5.14.1",
+    "express": "^4.19.2",
+    "flowbite": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@rsbuild/core": "^0.4.2",
-    "@rsbuild/plugin-react": "^0.4.2",
+    "@rsbuild/core": "^0.5.7",
+    "@rsbuild/plugin-react": "^0.5.7",
+    "@swc/cli": "^0.3.10",
+    "@swc/core": "^1.4.2",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
+    "run-script-webpack-plugin": "^0.2.0",
     "typescript": "^5.3.0"
   }
 }
