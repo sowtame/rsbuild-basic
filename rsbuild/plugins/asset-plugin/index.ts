@@ -1,10 +1,16 @@
 import { RsbuildPlugin } from '@rsbuild/core'
 import fs from 'fs'
+import { getParsedAssets } from './utils/get-parsed-assets'
 
-const writeAssetsFile = (manifest) => {
-  const outputFile = ''
+export * from './utils/get-parsed-assets'
 
-  fs.writeFileSync(outputFile, manifest)
+const writeAssetsFile = (outputFile: string, manifest: string) => {
+  try {
+    fs.mkdirSync(outputFile, { recursive: true })
+    fs.writeFileSync(`${outputFile}/app-manifest.json`, manifest)
+  } catch (error) {
+    console.log('🚀 ~ writeAssetsFile ~ error:', error)
+  }
 }
 
 export const pluginAssets = (): RsbuildPlugin => ({
@@ -12,7 +18,17 @@ export const pluginAssets = (): RsbuildPlugin => ({
 
   setup(api) {
     api.onDevCompileDone(({ stats }) => {
-      // stats.toJson({ cachedAssets: false }).children[1].assets
+      const bothAssets = stats.toJson({ all: false, entrypoints: true, outputPath: true }).children
+
+      const clientData = bothAssets && bothAssets[1]
+
+      if (clientData && clientData.entrypoints) {
+        const clientAssets = clientData.entrypoints['index'].assets
+
+        writeAssetsFile(`${clientData.outputPath}/static`, JSON.stringify(getParsedAssets(clientAssets)))
+      }
+
+      debugger
     })
   },
 })

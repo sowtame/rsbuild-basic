@@ -1,6 +1,7 @@
 import { defineConfig } from '@rsbuild/core'
 import { pluginReact } from '@rsbuild/plugin-react'
 import { pluginRestartServer } from './rsbuild/plugins/restart-server-plugin'
+import { pluginAssets } from './rsbuild/plugins/asset-plugin'
 
 export default defineConfig({
   source: {
@@ -17,7 +18,7 @@ export default defineConfig({
       }
     },
   },
-  plugins: [pluginReact(), pluginRestartServer()],
+  plugins: [pluginReact(), pluginAssets()],
   output: {
     targets: ['node', 'web'],
   },
@@ -35,7 +36,7 @@ export default defineConfig({
     //   },
     // ],
   },
-  tools: {
-    htmlPlugin: false,
-  },
+  // tools: {
+  //   htmlPlugin: false,
+  // },
 })
