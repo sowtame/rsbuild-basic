@@ -1,30 +1,52 @@
 import express from 'express'
+import path from 'path'
 import { createRsbuild } from '@rsbuild/core'
 import { loadConfig } from '@rsbuild/core'
 
+const wait = () =>
+  new Promise((res) => {
+    setTimeout(() => {
+      res()
+    }, 2500)
+  })
+
 export async function startDevServer() {
-  const { content } = await loadConfig({})
+  const { content, filePath } = await loadConfig({})
+  // console.log('🚀 ~ startDevServer ~ filePath:', filePath)
 
   // Init Rsbuild
   const rsbuild = await createRsbuild({
     rsbuildConfig: content,
   })
 
-  const app = express()
+  // Create Rsbuild DevServer instance
+  const rsbuildServer = await rsbuild.createDevServer()
+
+  await wait()
+
+  const remotesPath = path.join(process.cwd(), './dist/server/index.js')
+
+  const importedApp = await import(remotesPath)
+
+  console.log('🚀 ~ startDevServer ~ importedApp:', importedApp)
+
+  const app = importedApp.default.default
 
   // app.all('*', async (req, res, next) => {
   //   try {
-  //     // const remotesPath = path.join(process.cwd(), './dist/server/index.js')
-  //     // const a = await import('./../../src/server/server-render')
+  //     res.setHeader('Content-type', 'text/html')
+  //     res.write('<!DOCTYPE html>')
+  //     res.write('<html>')
 
-  //     serverRender(req, res, next)
+  //     res.write(`<div id="root">${1}</div>`)
+  //     res.write('</body></html>')
+  //     res.send()
+
+  //     next()
   //   } catch (error) {
   //     console.log('🚀 ~ app.all ~ error:', error)
   //   }
   // })
-
-  // Create Rsbuild DevServer instance
-  const rsbuildServer = await rsbuild.createDevServer()
 
   // Apply Rsbuild’s built-in middlewares
   app.use(rsbuildServer.middlewares)
@@ -35,7 +57,9 @@ export async function startDevServer() {
   })
 
   // Subscribe to the server's http upgrade event to handle WebSocket upgrades
-  httpServer.on('upgrade', rsbuildServer.onHTTPUpgrade)
+  httpServer.on('upgrade', (...params) => {
+    rsbuildServer.onHTTPUpgrade(params)
+  })
 
   return {
     close: async () => {

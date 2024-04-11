@@ -8,7 +8,7 @@ export type AppManifest = {
   js: AppManifestFile[]
 }
 
-const domain = 'http://localhost:8080/'
+const domain = ''
 
 export const getParsedAssets = (assets: JsStatsChunkGroupAsset[]) => {
   return assets.reduce<AppManifest>(
