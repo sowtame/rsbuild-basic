@@ -1,6 +1,5 @@
 import { defineConfig } from '@rsbuild/core'
 import { pluginReact } from '@rsbuild/plugin-react'
-import { pluginRestartServer } from './rsbuild/plugins/restart-server-plugin'
 import { pluginAssets } from './rsbuild/plugins/asset-plugin'
 
 export default defineConfig({
@@ -27,16 +26,10 @@ export default defineConfig({
       strategy: 'split-by-module',
     },
   },
-  server: {},
   dev: {
     writeToDisk: true,
-    // setupMiddlewares: [
-    //   (middleware) => {
-    //     middleware.unshift(app)
-    //   },
-    // ],
   },
-  // tools: {
-  //   htmlPlugin: false,
-  // },
+  tools: {
+    htmlPlugin: false,
+  },
 })

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "rsbuild dev --open",
+    "start:pure": "node ./rsbuild/devServer/index.mjs",
     "build": "rsbuild build && rsbuild preview",
     "build:pure": "rsbuild build",
     "preview": "rsbuild preview"

@@ -27,8 +27,6 @@ export const pluginAssets = (): RsbuildPlugin => ({
 
         writeAssetsFile(`${clientData.outputPath}/static`, JSON.stringify(getParsedAssets(clientAssets)))
       }
-
-      debugger
     })
   },
 })

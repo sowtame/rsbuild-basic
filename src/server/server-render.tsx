@@ -12,6 +12,7 @@ export const serverRender = (req: Request, res, next) => {
   const markup = renderToString(<App />)
 
   res.statusCode = 200
+
   res.setHeader('Content-type', 'text/html')
   res.write('<!DOCTYPE html>')
   res.write('<html>')

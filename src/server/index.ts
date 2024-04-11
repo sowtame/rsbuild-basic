@@ -2,7 +2,7 @@ import express from 'express'
 import { serverRender } from './server-render'
 
 const app = express()
-const PORT = 8081
+const PORT = 8080
 
 app.all('*', async (req, res, next) => {
   try {
