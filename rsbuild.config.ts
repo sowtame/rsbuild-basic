@@ -28,6 +28,8 @@ export default defineConfig({
   },
   dev: {
     writeToDisk: true,
+    // liveReload: true,
+    // progressBar: true,
   },
   tools: {
     htmlPlugin: false,

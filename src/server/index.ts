@@ -1,20 +1,21 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import { serverRender } from './server-render'
 
-const app = express()
-console.log(1)
-// const PORT = 8080
+export const startServer = () => {
+  const app = express()
 
-app.all('/', async (req, res, next) => {
-  try {
-    serverRender(req, res, next)
-  } catch (error) {
-    console.log('🚀 ~ app.all ~ error:', error)
-  }
-})
+  console.log('read server time', new Date().toLocaleTimeString())
 
-// app.listen(PORT, () => {
-//   console.info(`[${new Date().toISOString()}]`, `App2 is running: 🌎 http://localhost:${PORT}`)
-// })
+  app.get('/', async (req: Request, res: Response) => {
+    return res.send(`date test 3`)
+    // try {
+    //   return serverRender(req, res)
+    // } catch (error: any) {
+    //   console.log('🚀 ~ app.all ~ error:', error?.message)
+    //   // res.status(200).send(error?.message)
+    //   // console.log('🚀 ~ app.all ~ error:', error)
+    // }
+  })
 
-export default app
+  return app
+}
