@@ -13,6 +13,14 @@ const require = createRequire(import.meta.url)
 
 let httpServer
 
+const closeServer = (server) =>
+  new Promise((res) => {
+    server.close(() => {
+      console.log('close http server')
+      res('')
+    })
+  })
+
 const loadServerApp = async () => {
   delete require.cache[serverPath]
 
@@ -23,8 +31,8 @@ const loadServerApp = async () => {
 
 const startCustomDevServer = async ({ rsbuildServer }) => {
   if (httpServer) {
-    console.log('close prev server')
-    httpServer.close()
+    console.log('closing http server')
+    await closeServer(httpServer)
     httpServer = undefined
   }
 
@@ -57,14 +65,13 @@ export async function startDevServer() {
   // Create Rsbuild DevServer instance
   const rsbuildServer = await rsbuild.createDevServer()
 
-  const startCustomDevServerWithRsBuild = () => startCustomDevServer({ rsbuildServer })
-
   rsbuild.onDevCompileDone(async ({ isFirstCompile }) => {
-    if (isFirstCompile) {
-      chokidar.watch(serverdiRPath).on('all', (evt, name) => {
-        startCustomDevServerWithRsBuild()
-      })
-    }
+    startCustomDevServer({ rsbuildServer })
+    // if (isFirstCompile) {
+    //   chokidar.watch(serverdiRPath).on('all', (evt, name) => {
+    //     startCustomDevServer({ rsbuildServer })
+    //   })
+    // }
   })
 
   return {
