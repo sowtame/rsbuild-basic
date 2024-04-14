@@ -12,6 +12,7 @@ const serverdiRPath = path.join(process.cwd(), './dist/server/index.js')
 const require = createRequire(import.meta.url)
 
 let httpServer
+let httpServerClosing = false
 
 const closeServer = (server) =>
   new Promise((res) => {
@@ -32,8 +33,10 @@ const loadServerApp = async () => {
 const startCustomDevServer = async ({ rsbuildServer }) => {
   if (httpServer) {
     console.log('closing http server')
+    httpServerClosing = true
     await closeServer(httpServer)
     httpServer = undefined
+    httpServerClosing = false
   }
 
   const app = await loadServerApp()
@@ -66,7 +69,9 @@ export async function startDevServer() {
   const rsbuildServer = await rsbuild.createDevServer()
 
   rsbuild.onDevCompileDone(async ({ isFirstCompile }) => {
-    startCustomDevServer({ rsbuildServer })
+    if (!httpServerClosing) {
+      startCustomDevServer({ rsbuildServer })
+    }
     // if (isFirstCompile) {
     //   chokidar.watch(serverdiRPath).on('all', (evt, name) => {
     //     startCustomDevServer({ rsbuildServer })

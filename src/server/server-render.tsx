@@ -21,10 +21,8 @@ export const serverRender = () => {
         .join('')}
       </head>
       <body>
-          <div id="roo3131t">test332</div>
           <div id="root">
               ${markup}
-              </div>
           </div>
           ${manifest.js
             .map(({ path }) => {
