@@ -25,7 +25,8 @@ export const serverRender = (req: Request, res, next) => {
   }
   res.write(`</head>`)
 
-  // res.write(`<head>${linkTags}</head><body>`)
+  res.write(`<body>`)
+  res.write(`<div id="roo3131t">test33</div>`)
   res.write(`<div id="root">${markup}</div>`)
 
   // res.write(scriptTags)
@@ -37,7 +38,7 @@ export const serverRender = (req: Request, res, next) => {
   }
   // res.write('<script async data-chunk="main" src="http://localhost:8080/static/index.js"></script>')
   res.write('</body></html>')
-  res.send()
+  res.send(200)
 
   next()
 }

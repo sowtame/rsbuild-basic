@@ -1,3 +1,3 @@
-import { startDevServer } from './server.mjs'
+import { startDevServer } from './server-watch.mjs'
 
 startDevServer()

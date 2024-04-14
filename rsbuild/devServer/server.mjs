@@ -11,8 +11,7 @@ const wait = () =>
   })
 
 export async function startDevServer() {
-  const { content, filePath } = await loadConfig({})
-  // console.log('🚀 ~ startDevServer ~ filePath:', filePath)
+  const { content } = await loadConfig({})
 
   // Init Rsbuild
   const rsbuild = await createRsbuild({
@@ -27,8 +26,6 @@ export async function startDevServer() {
   const remotesPath = path.join(process.cwd(), './dist/server/index.js')
 
   const importedApp = await import(remotesPath)
-
-  console.log('🚀 ~ startDevServer ~ importedApp:', importedApp)
 
   const app = importedApp.default.default
 
