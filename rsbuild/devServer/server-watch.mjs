@@ -46,7 +46,7 @@ const startCustomDevServer = async ({ rsbuildServer }) => {
 
   console.log('start server')
 
-  httpServer = app.listen(rsbuildServer.port, async () => {
+  httpServer = fastify.listen(rsbuildServer.port, async () => {
     console.log('ready express server')
 
     // Notify Rsbuild that the custom server has started

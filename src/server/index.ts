@@ -1,18 +1,19 @@
-import express, { Request, Response } from 'express'
+import Fastify from 'fastify'
 import { serverRender } from './server-render'
+// @ts-ignore
+import fastExp from '@fastify/express'
 
 export const startServer = async () => {
-  const app = express()
+  const fastify = Fastify()
+  await fastify.register(fastExp)
 
   console.log('read server code', new Date().toLocaleTimeString())
 
-  app.get('/', async (req: Request, res: Response) => {
+  fastify.get('/', (req, reply) => {
     const html = serverRender()
 
-    res.setHeader('content-type', 'text/html')
-
-    return res.send(html)
+    reply.send(html).type('text/html')
   })
 
-  return app
+  return fastify
 }
