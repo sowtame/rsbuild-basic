@@ -69,14 +69,13 @@ export async function startDevServer() {
   const rsbuildServer = await rsbuild.createDevServer()
 
   rsbuild.onDevCompileDone(async ({ isFirstCompile }) => {
-    if (!httpServerClosing) {
-      startCustomDevServer({ rsbuildServer })
+    if (isFirstCompile) {
+      chokidar.watch(serverdiRPath).on('all', (evt, name) => {
+        if (!httpServerClosing) {
+          startCustomDevServer({ rsbuildServer })
+        }
+      })
     }
-    // if (isFirstCompile) {
-    //   chokidar.watch(serverdiRPath).on('all', (evt, name) => {
-    //     startCustomDevServer({ rsbuildServer })
-    //   })
-    // }
   })
 
   return {
