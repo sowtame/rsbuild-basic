@@ -40,10 +40,42 @@ const startCustomDevServer = async ({ rsbuildServer }) => {
   console.log('start server')
 
   app.listen({ port: rsbuildServer.port }, async () => {
-    console.log('ready express server')
+    console.log('ready fastify server')
 
     // Notify Rsbuild that the custom server has started
     await rsbuildServer.afterListen()
+  })
+
+  // app.register(async function (fastify) {
+  //   fastify.get('/*', { websocket: true }, (socket /* WebSocket */, req /* FastifyRequest */) => {
+  //     console.log(1)
+
+  //     rsbuildServer.onHTTPUpgrade(socket, req)
+  //   })
+  // })
+
+  // app.get('/*', { websocket: true }, (socket, request) => {
+  //   // @ts-ignore
+  //   const sessionPromise = request.getSession() // example async session getter, called synchronously to return a promise
+
+  //   socket.on('upgrade', async (message) => {
+  //     const session = await sessionPromise()
+  //     console.log('🚀 ~ socket.on ~ session:', session)
+  //     // do something with the message and session
+  //   })
+  // })
+
+  app.register(async function (fastify) {
+    app.get('/*', { websocket: true }, (socket, request) => {
+      // @ts-ignore
+      const sessionPromise = request.getSession() // example async session getter, called synchronously to return a promise
+
+      socket.on('upgrade', async (message) => {
+        const session = await sessionPromise()
+        console.log('🚀 ~ socket.on ~ session:', session)
+        // do something with the message and session
+      })
+    })
   })
 
   // Subscribe to the server's http upgrade event to handle WebSocket upgrades

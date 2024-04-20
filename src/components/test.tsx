@@ -6,7 +6,7 @@ type Props = {}
 export const Test = ({}: Props) => {
   return (
     <div>
-      <Button>test now</Button>
+      <Button>test </Button>
       <Alert title="Alert"></Alert>
     </div>
   )
