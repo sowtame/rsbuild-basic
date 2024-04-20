@@ -12,7 +12,7 @@ export const App = () => {
   return (
     <div className="content">
       <Test />
-      <Button onClick={() => setOpen(!open)}>setOpen</Button>
+      <Button onClick={() => setOpen(!open)}>setOpen </Button>
       {/* {open && <TestLazy />} */}
       <div>13</div>
       <Suspense fallback={'loading'}>{open && <TestLazy />}</Suspense>

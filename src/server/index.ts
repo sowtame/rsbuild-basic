@@ -1,19 +1,22 @@
 import Fastify from 'fastify'
 import { serverRender } from './server-render'
-// @ts-ignore
 import fastExp from '@fastify/express'
 
 export const startServer = async () => {
   const fastify = Fastify()
-  await fastify.register(fastExp)
+
+  fastify.register(fastExp)
 
   console.log('read server code', new Date().toLocaleTimeString())
 
   fastify.get('/', (req, reply) => {
     const html = serverRender()
 
-    reply.send(html).type('text/html')
+    return reply.header('content-type', 'text/html').send(html)
   })
+
+  // Subscribe to the server's http upgrade event to handle WebSocket upgrades
+  // fastify.on('upgrade', rsbuildServer.onHTTPUpgrade)
 
   return fastify
 }

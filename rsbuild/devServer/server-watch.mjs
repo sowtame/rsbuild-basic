@@ -11,16 +11,8 @@ const serverdiRPath = path.join(process.cwd(), './dist/server/index.js')
 
 const require = createRequire(import.meta.url)
 
-let httpServer
+let app
 let httpServerClosing = false
-
-const closeServer = (server) =>
-  new Promise((res) => {
-    server.close(() => {
-      console.log('close http server')
-      res('')
-    })
-  })
 
 const loadServerApp = async () => {
   delete require.cache[serverPath]
@@ -31,22 +23,23 @@ const loadServerApp = async () => {
 }
 
 const startCustomDevServer = async ({ rsbuildServer }) => {
-  if (httpServer) {
+  if (app) {
     console.log('closing http server')
     httpServerClosing = true
-    await closeServer(httpServer)
-    httpServer = undefined
+    await app.close()
+    console.log('closed http server')
+    app = undefined
     httpServerClosing = false
   }
 
-  const app = await loadServerApp()
+  app = await loadServerApp()
 
   // Apply Rsbuild’s built-in middlewares
   app.use(rsbuildServer.middlewares)
 
   console.log('start server')
 
-  httpServer = fastify.listen(rsbuildServer.port, async () => {
+  app.listen({ port: rsbuildServer.port }, async () => {
     console.log('ready express server')
 
     // Notify Rsbuild that the custom server has started
@@ -54,7 +47,7 @@ const startCustomDevServer = async ({ rsbuildServer }) => {
   })
 
   // Subscribe to the server's http upgrade event to handle WebSocket upgrades
-  httpServer.on('upgrade', rsbuildServer.onHTTPUpgrade)
+  // app.on('upgrade', rsbuildServer.onHTTPUpgrade)
 }
 
 export async function startDevServer() {
@@ -81,7 +74,7 @@ export async function startDevServer() {
   return {
     close: async () => {
       await rsbuildServer.close()
-      httpServer.close()
+      app.close()
     },
   }
 }
