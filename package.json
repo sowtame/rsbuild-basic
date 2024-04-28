@@ -12,6 +12,7 @@
   "dependencies": {
     "@alfalab/core-components": "^45.0.0",
     "@fastify/express": "^3.0.0",
+    "@fastify/middie": "^8.3.0",
     "@fastify/websocket": "^10.0.1",
     "@loadable/component": "^5.16.3",
     "bufferutil": "^4.0.8",

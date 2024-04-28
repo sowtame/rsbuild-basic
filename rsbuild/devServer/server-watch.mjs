@@ -2,6 +2,7 @@
 import path from 'path'
 import { createRsbuild } from '@rsbuild/core'
 import { loadConfig } from '@rsbuild/core'
+// import middie from '@fastify/middie'
 import chokidar from 'chokidar'
 
 import { createRequire } from 'module'
@@ -39,47 +40,14 @@ const startCustomDevServer = async ({ rsbuildServer }) => {
 
   console.log('start server')
 
-  app.listen({ port: rsbuildServer.port }, async () => {
-    console.log('ready fastify server')
+  console.log(rsbuildServer.port)
 
-    // Notify Rsbuild that the custom server has started
-    await rsbuildServer.afterListen()
-  })
+  await app.listen({ port: rsbuildServer.port })
 
-  // app.register(async function (fastify) {
-  //   fastify.get('/*', { websocket: true }, (socket /* WebSocket */, req /* FastifyRequest */) => {
-  //     console.log(1)
+  console.log('ready fastify server')
 
-  //     rsbuildServer.onHTTPUpgrade(socket, req)
-  //   })
-  // })
-
-  // app.get('/*', { websocket: true }, (socket, request) => {
-  //   // @ts-ignore
-  //   const sessionPromise = request.getSession() // example async session getter, called synchronously to return a promise
-
-  //   socket.on('upgrade', async (message) => {
-  //     const session = await sessionPromise()
-  //     console.log('🚀 ~ socket.on ~ session:', session)
-  //     // do something with the message and session
-  //   })
-  // })
-
-  app.register(async function (fastify) {
-    app.get('/*', { websocket: true }, (socket, request) => {
-      // @ts-ignore
-      const sessionPromise = request.getSession() // example async session getter, called synchronously to return a promise
-
-      socket.on('upgrade', async (message) => {
-        const session = await sessionPromise()
-        console.log('🚀 ~ socket.on ~ session:', session)
-        // do something with the message and session
-      })
-    })
-  })
-
-  // Subscribe to the server's http upgrade event to handle WebSocket upgrades
-  // app.on('upgrade', rsbuildServer.onHTTPUpgrade)
+  // Notify Rsbuild that the custom server has started
+  await rsbuildServer.afterListen()
 }
 
 export async function startDevServer() {
@@ -95,11 +63,11 @@ export async function startDevServer() {
 
   rsbuild.onDevCompileDone(async ({ isFirstCompile }) => {
     if (isFirstCompile) {
-      chokidar.watch(serverdiRPath).on('all', (evt, name) => {
-        if (!httpServerClosing) {
+      if (!httpServerClosing) {
+        chokidar.watch(serverdiRPath).on('all', (evt, name) => {
           startCustomDevServer({ rsbuildServer })
-        }
-      })
+        })
+      }
     }
   })
 
